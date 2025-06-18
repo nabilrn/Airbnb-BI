@@ -137,6 +137,4 @@ Proyek ini dikembangkan dan dikelola oleh Tim 7:
 | **NAVISA NAUFAL**| 2211522020 |
 | **MUHAMMAD FARIZ**| 2211523034 |
 
-## 📜 Lisensi
 
-Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file `LICENSE` untuk detailnya.

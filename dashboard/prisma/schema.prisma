@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+// Dimension Tables
+model DimListing {
+  id             String @id @db.Uuid
+  name           String?
+  minimum_nights Int?
+  
+  // Relations
+  fact_listings  FactListingDaily[]
+  
+  @@map("dim_listing")
+}
+
+model DimHost {
+  id        String @id @db.Uuid
+  host_name String?
+  
+  // Relations
+  fact_listings FactListingDaily[]
+  
+  @@map("dim_host")
+}
+
+model DimLocation {
+  id                  String @id @db.Uuid
+  neighbourhood_group String?
+  neighbourhood       String?
+  latitude            Float?
+  longitude           Float?
+  
+  // Relations
+  fact_listings FactListingDaily[]
+  
+  @@map("dim_location")
+}
+
+model DimRoomType {
+  id        String @id @db.Uuid
+  room_type String?
+  
+  // Relations
+  fact_listings FactListingDaily[]
+  
+  @@map("dim_room_type")
+}
+
+model DimDate {
+  id          String @id @db.Uuid
+  date        DateTime @db.Date
+  day         Int?
+  month       Int?
+  year        Int?
+  day_of_week String?
+  is_weekend  Boolean?
+  
+  // Relations
+  fact_listings FactListingDaily[]
+  
+  @@map("dim_date")
+}
+
+// Fact Table
+model FactListingDaily {
+  id                              String @id @db.Uuid
+  listing_id                      String @db.Uuid
+  host_id                         String @db.Uuid
+  location_id                     String @db.Uuid
+  room_type_id                    String @db.Uuid
+  date_id                         String @db.Uuid
+  price                           Int?
+  availability_365                Int?
+  number_of_reviews               Int?
+  reviews_per_month               Float?
+  calculated_host_listings_count  Int?
+  
+  // Relations
+  listing   DimListing  @relation(fields: [listing_id], references: [id])
+  host      DimHost     @relation(fields: [host_id], references: [id])
+  location  DimLocation @relation(fields: [location_id], references: [id])
+  room_type DimRoomType @relation(fields: [room_type_id], references: [id])
+  date      DimDate     @relation(fields: [date_id], references: [id])
+  
+  @@map("fact_listing_daily")
+}

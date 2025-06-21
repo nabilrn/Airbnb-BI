@@ -1,3 +1,1 @@
-# .gitattributes
-*.ipynb merge=union
-*.ipynb diff=ipynb
+*.ipynb linguist-vendored
